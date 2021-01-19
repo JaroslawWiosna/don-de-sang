@@ -28,6 +28,19 @@ void print1(FILE *stream, Dynamic_Array<T> d) {
     } 
 }
 
+void sanity_check(Dynamic_Array<Donation> d) {
+    long long max{};
+    for (size_t i{}; i < d.size; ++i) {
+        char buf[255];
+        strftime(buf, sizeof(buf), "%s", &d.data[i].t);
+        long long curr = atoll(buf);
+        if (curr < max) {
+            panic("Donations are not sorted");
+        }
+        max = curr;
+    }  
+}
+
 Dynamic_Array<Donation> parse_db_file(String_View db_file) {
     Dynamic_Array<Donation> donations{};
     while (db_file.count > 0) {
@@ -56,5 +69,6 @@ int main() {
     auto db_file = read_file_as_string_view("db.txt").value_or({});
 
     auto donations = parse_db_file(db_file);
+    sanity_check(donations);
     println(stdout, donations);
 }

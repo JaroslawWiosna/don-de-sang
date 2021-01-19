@@ -87,6 +87,14 @@ void sum(Dynamic_Array<Donation> d) {
     }
 }
 
+#if 0
+struct Treshold {
+    unsigned int thr{};
+    struct tm* origin{};
+    struct tm* last{};
+};
+#endif
+
 void summary(Dynamic_Array<Donation> d) {
     bool thd_05{};
     for (size_t i{}; i < d.size; ++i) {

@@ -6,7 +6,8 @@ using namespace aids;
 
 struct Donation {
    struct tm t{};
-   String_View desc{};
+   unsigned int amount{450};
+   unsigned int sum{};
 };
 
 void print1(FILE *stream, Donation don) {
@@ -16,7 +17,9 @@ void print1(FILE *stream, Donation don) {
     strftime(buf, sizeof(buf), "%d %b %Y", &don.t);
     print(stream, buf);
     print(stream, ", ");
-    print(stream, don.desc);
+    print(stream, don.amount);
+    print(stream, ", ");
+    print(stream, don.sum);
     print(stream, '}');
     print(stream, '\n');
 }
@@ -52,6 +55,17 @@ Dynamic_Array<Donation> parse_db_file(String_View db_file) {
         auto date = line.chop_word();
         line = line.trim();
         auto desc = line.chop_word();
+        desc = desc.trim();
+        unsigned int amount{};
+        if ("450ml"_sv == desc) {
+            amount = 450;
+        } else if ("KP"_sv == desc) {
+            amount = 450;
+        } else if ("sep"_sv == desc) {
+            amount = 500;
+        } else {
+            panic("Unknown desc `", desc , '`');
+        }
 
         struct tm tm;
 
@@ -60,15 +74,24 @@ Dynamic_Array<Donation> parse_db_file(String_View db_file) {
         memcpy(buf0, date.data, date.count);
         strptime(buf0, "%Y-%m-%d", &tm);
 
-        donations.push({tm, desc});
+        donations.push(Donation{tm, amount, {}});
     }
     return donations;
 }
 
+void sum(Dynamic_Array<Donation> d) {
+    unsigned int acc{};
+    for (size_t i{}; i < d.size; ++i) {
+        acc += d.data[i].amount;
+        d.data[i].sum = acc;
+    }
+}
+
 int main() {
     auto db_file = read_file_as_string_view("db.txt").value_or({});
-
     auto donations = parse_db_file(db_file);
     sanity_check(donations);
+    sum(donations);
+
     println(stdout, donations);
 }

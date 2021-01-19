@@ -92,6 +92,16 @@ struct Treshold {
     bool passed{};
     struct tm* origin{};
     struct tm* last{};
+
+    long long diff() {
+        char buf1[255];
+        strftime(buf1, sizeof(buf1), "%s", origin);
+        
+        char buf2[255];
+        strftime(buf2, sizeof(buf2), "%s", last);
+        
+        return atoll(buf2) - atoll(buf1);
+    };
 };
 
 void summary(Dynamic_Array<Donation> d) {
@@ -99,7 +109,9 @@ void summary(Dynamic_Array<Donation> d) {
     for (size_t i{}; i < d.size; ++i) {
         print(stdout, i+1, ". ", d.data[i]);
         if (!thd.passed && d.data[i].sum >= 5000) {
-            print(stdout, "5'000 treshold reached! It took ", "TODO: difftime(d.data[i].t, d.data[0].t");
+            thd.origin = &d.data[0].t;
+            thd.last = &d.data[i].t;
+            print(stdout, "5'000 treshold reached! It took ", (long)thd.diff() / 86400, " days.");
             thd.passed = true;
             
             print(stdout, '\n');

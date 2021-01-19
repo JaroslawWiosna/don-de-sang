@@ -87,11 +87,24 @@ void sum(Dynamic_Array<Donation> d) {
     }
 }
 
+void summary(Dynamic_Array<Donation> d) {
+    bool thd_05{};
+    for (size_t i{}; i < d.size; ++i) {
+        print(stdout, i+1, ". ", d.data[i]);
+        if (!thd_05 && d.data[i].sum >= 5000) {
+            print(stdout, "5'000 treshold reached! It took ", "TODO: difftime(d.data[i].t, d.data[0].t");
+            thd_05 = true;
+            
+            print(stdout, '\n');
+        }
+    }
+}
+
 int main() {
     auto db_file = read_file_as_string_view("db.txt").value_or({});
-    auto donations = parse_db_file(db_file);
-    sanity_check(donations);
-    sum(donations);
+    auto dons = parse_db_file(db_file);
+    sanity_check(dons);
+    sum(dons);
 
-    println(stdout, donations);
+    summary(dons);
 }

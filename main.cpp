@@ -13,7 +13,7 @@ struct Donation {
 void print1(FILE *stream, Donation don) {
     print(stream, '{');
 
-    char buf[255];
+    char buf[255] = {};
     strftime(buf, sizeof(buf), "%d %b %Y", &don.t);
     print(stream, buf);
     print(stream, ", ");

@@ -104,39 +104,6 @@ struct Treshold {
     };
 };
 
-void summary(Dynamic_Array<Donation> d) {
-    Treshold thd1{6000};
-    Treshold thd2{12000};
-    Treshold thd3{18000};
-    for (size_t i{}; i < d.size; ++i) {
-        print(stdout, i+1, ". ", d.data[i]);
-        if (!thd1.passed && d.data[i].sum >= thd1.thr) {
-            thd1.origin = &d.data[0].t;
-            thd1.last = &d.data[i].t;
-            print(stdout, thd1.thr, " treshold reached! It took ", (long)thd1.diff() / 86400, " days.");
-            thd1.passed = true;
-            
-            print(stdout, '\n');
-        }
-        if (!thd2.passed && d.data[i].sum >= thd2.thr) {
-            thd2.origin = &d.data[0].t;
-            thd2.last = &d.data[i].t;
-            print(stdout, thd2.thr, " treshold reached! It took ", (long)thd2.diff() / 86400, " days.");
-            thd2.passed = true;
-            
-            print(stdout, '\n');
-        }
-        if (!thd3.passed && d.data[i].sum >= thd3.thr) {
-            thd3.origin = &d.data[0].t;
-            thd3.last = &d.data[i].t;
-            print(stdout, thd3.thr, " treshold reached! It took ", (long)thd3.diff() / 86400, " days.");
-            thd3.passed = true;
-            
-            print(stdout, '\n');
-        }
-    }
-}
-
 struct Date {
     String_View sv{};
 };
@@ -168,6 +135,50 @@ Duration operator-(Date end, Date begin){
     strftime(buf2, sizeof(buf2), "%s", &tm);
         
     return {atoll(buf2) - atoll(buf1)};
+}
+
+Duration operator-(const struct tm end, const struct tm begin){
+    char buf1[255];
+    strftime(buf1, sizeof(buf1), "%s", &begin);
+
+    char buf2[255];
+    strftime(buf2, sizeof(buf2), "%s", &end);
+        
+    return {atoll(buf2) - atoll(buf1)};
+}
+
+
+void summary(Dynamic_Array<Donation> d) {
+    Treshold thd1{6000};
+    Treshold thd2{12000};
+    Treshold thd3{18000};
+    for (size_t i{}; i < d.size; ++i) {
+        print(stdout, i+1, ". ", d.data[i]);
+        if (!thd1.passed && d.data[i].sum >= thd1.thr) {
+            thd1.origin = &d.data[0].t;
+            thd1.last = &d.data[i].t;
+            print(stdout, thd1.thr, " treshold reached! It took ", operator-(*thd1.last, *thd1.origin).c_str());
+            thd1.passed = true;
+            
+            print(stdout, '\n');
+        }
+        if (!thd2.passed && d.data[i].sum >= thd2.thr) {
+            thd2.origin = &d.data[0].t;
+            thd2.last = &d.data[i].t;
+            print(stdout, thd2.thr, " treshold reached! It took ", operator-(*thd2.last, *thd2.origin).c_str());
+            thd2.passed = true;
+            
+            print(stdout, '\n');
+        }
+        if (!thd3.passed && d.data[i].sum >= thd3.thr) {
+            thd3.origin = &d.data[0].t;
+            thd3.last = &d.data[i].t;
+            print(stdout, thd3.thr, " treshold reached! It took ", operator-(*thd3.last, *thd3.origin).c_str());
+            thd3.passed = true;
+            
+            print(stdout, '\n');
+        }
+    }
 }
 
 int test() {

@@ -137,6 +137,49 @@ void summary(Dynamic_Array<Donation> d) {
     }
 }
 
+struct Date {
+    String_View sv{};
+};
+
+struct Duration {
+    long long dur{};
+
+    char *c_str() {
+        char *res = (char*)malloc(256);
+        sprintf(res, "%lld days", dur / 86400);
+        return res;
+    }
+};
+
+Duration operator-(Date end, Date begin){
+    struct tm tm;
+    memset(&tm, 0, sizeof(struct tm)); 
+    char buf0[255];
+    memcpy(buf0, begin.sv.data, begin.sv.count);
+    strptime(buf0, "%Y-%m-%d", &tm);
+
+    char buf1[255];
+    strftime(buf1, sizeof(buf1), "%s", &tm);
+
+    memcpy(buf0, end.sv.data, end.sv.count);
+    strptime(buf0, "%Y-%m-%d", &tm);
+
+    char buf2[255];
+    strftime(buf2, sizeof(buf2), "%s", &tm);
+        
+    return {atoll(buf2) - atoll(buf1)};
+}
+
+int test() {
+    Date begin{"2012-01-01"_sv};
+    Date end{"2016-01-02"_sv};
+
+    Duration period = end - begin;
+    puts(period.c_str());
+    assert(!strcmp("1462 days", period.c_str()));
+    return 0;
+}
+
 int main() {
     auto db_file = read_file_as_string_view("db.txt").value_or({});
     auto dons = parse_db_file(db_file);
@@ -144,4 +187,5 @@ int main() {
     sum(dons);
 
     summary(dons);
+    return 0;
 }

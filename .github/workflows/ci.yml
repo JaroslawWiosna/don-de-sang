@@ -21,6 +21,12 @@ jobs:
       - name: run
         run: |
           make run
+      - name: valgrind
+        run: |
+          make valgrind
+      - name: callgrind
+        run: |
+          make callgrind
         env:
           CC: gcc
           CXX: g++
@@ -43,6 +49,12 @@ jobs:
       - name: run
         run: |
           make run
+      - name: valgrind
+        run: |
+          make valgrind
+      - name: callgrind
+        run: |
+          make callgrind
         env:
           CC: clang
           CXX: clang++

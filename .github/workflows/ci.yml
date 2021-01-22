@@ -1,0 +1,49 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  build-linux-gcc:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq git
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ./3rd_party/musl-v1.2.1-dist
+          key: ${{ runner.os }}-musl-1.2.1
+      - name: build
+        run: |
+          make -B
+      - name: run
+        run: |
+          make run
+        env:
+          CC: gcc
+          CXX: g++
+  build-linux-clang:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v1
+      - name: install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -qq git
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ./3rd_party/musl-v1.2.1-dist
+          key: ${{ runner.os }}-musl-1.2.1
+      - name: build
+        run: |
+          make -B
+      - name: run
+        run: |
+          make run
+        env:
+          CC: clang
+          CXX: clang++
+

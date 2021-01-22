@@ -108,6 +108,7 @@ struct Date {
     String_View sv{};
 };
 
+// NOTE: issue `man 1 date` and find `iso-8601` for details
 Date load_date_from_iso8601(String_View sv) {
     Date res{};
     res.sv = sv;

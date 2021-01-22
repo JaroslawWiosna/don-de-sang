@@ -18,9 +18,15 @@ jobs:
       - name: build
         run: |
           make -B
+      - name: info
+        run: |
+          make info
       - name: run
         run: |
           make run
+      - name: strace
+        run: |
+          make strace
       - name: valgrind
         run: |
           make valgrind || true
@@ -46,9 +52,15 @@ jobs:
       - name: build
         run: |
           make -B
+      - name: info
+        run: |
+          make info
       - name: run
         run: |
           make run
+      - name: strace
+        run: |
+          make strace
       - name: valgrind
         run: |
           make valgrind || true

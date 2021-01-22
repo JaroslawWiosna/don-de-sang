@@ -24,3 +24,11 @@ run: $(APP)
 $(APP): src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/musl-${MUSL_VERSION}-dist
 	$(CXX) $(CXXFLAGS) src/main.cpp 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crtn.o -o $(APP) $(LIBS)
 
+
+.PHONY: vallgrind callgrind
+
+valgrind: $(APP)
+	valgrind --track-origins=yes --leak-check=full ./$(APP)
+
+callgrind: $(APP)
+	valgrind --tool=callgrind --dump-instr=yes ./$(APP)

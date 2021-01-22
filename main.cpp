@@ -108,6 +108,12 @@ struct Date {
     String_View sv{};
 };
 
+Date load_date_from_iso8601(String_View sv) {
+    Date res{};
+    res.sv = sv;
+    return res;
+}
+
 struct Duration {
     long long dur{};
 
@@ -182,8 +188,8 @@ void summary(Dynamic_Array<Donation> d) {
 }
 
 int test() {
-    Date begin{"2012-01-01"_sv};
-    Date end{"2016-01-02"_sv};
+    Date begin = load_date_from_iso8601("2012-01-01"_sv);
+    Date end = load_date_from_iso8601("2016-01-02"_sv);
 
     Duration period = end - begin;
     puts(period.c_str());

@@ -1,3 +1,5 @@
 don-de-sang
 
 callgrind.out.*
+
+strace.log

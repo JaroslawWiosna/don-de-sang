@@ -37,3 +37,8 @@ info: $(APP)
 	file ./$(APP)
 	ldd ./$(APP) || true
 
+strace: $(APP)
+	rm -f strace.log
+	strace ./$(APP) 2> strace.log
+	cat -n strace.log
+

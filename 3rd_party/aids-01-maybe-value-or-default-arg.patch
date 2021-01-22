@@ -1,0 +1,13 @@
+diff --git a/3rd_party/aids-patched.hpp b/3rd_party/aids-patched.hpp
+index c73e189..f44dc45 100644
+--- a/3rd_party/aids-patched.hpp
++++ b/3rd_party/aids-patched.hpp
+@@ -296,7 +296,7 @@ namespace aids
+             return !this->has_value && !that.has_value;
+         }
+ 
+-        T value_or(T t) const {
++        T value_or(T t = {}) const {
+             return (has_value ? unwrap : t);
+         }
+     };

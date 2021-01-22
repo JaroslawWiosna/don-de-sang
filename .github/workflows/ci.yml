@@ -9,7 +9,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq git
+          sudo apt-get install -qq git valgrind
       - uses: actions/cache@v2
         with:
           path: |
@@ -21,6 +21,12 @@ jobs:
       - name: run
         run: |
           make run
+      - name: valgrind
+        run: |
+          make valgrind || true
+      - name: callgrind
+        run: |
+          make callgrind
         env:
           CC: gcc
           CXX: g++
@@ -31,7 +37,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq git
+          sudo apt-get install -qq git valgrind
       - uses: actions/cache@v2
         with:
           path: |
@@ -43,6 +49,12 @@ jobs:
       - name: run
         run: |
           make run
+      - name: valgrind
+        run: |
+          make valgrind || true
+      - name: callgrind
+        run: |
+          make callgrind
         env:
           CC: clang
           CXX: clang++

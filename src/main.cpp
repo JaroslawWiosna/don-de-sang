@@ -199,7 +199,7 @@ int test() {
 }
 
 int main() {
-    auto db_file = read_file_as_string_view("db.txt").value_or({});
+    auto db_file = read_file_as_string_view("db.txt").value_or();
     auto dons = parse_db_file(db_file);
     sanity_check(dons);
     sum(dons);

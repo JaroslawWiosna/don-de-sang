@@ -9,7 +9,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq git
+          sudo apt-get install -qq git valgrind
       - uses: actions/cache@v2
         with:
           path: |
@@ -37,7 +37,7 @@ jobs:
       - name: install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -qq git
+          sudo apt-get install -qq git valgrind
       - uses: actions/cache@v2
         with:
           path: |

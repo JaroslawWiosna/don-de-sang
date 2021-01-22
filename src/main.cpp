@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <time.h>
-#include "3rd_party/aids.hpp"
+#include "3rd_party/aids-patched.hpp"
 
 using namespace aids;
 

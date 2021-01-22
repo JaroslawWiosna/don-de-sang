@@ -16,6 +16,6 @@ run: $(APP)
 3rd_party/musl-${MUSL_VERSION}-dist:
 	(cd 3rd_party/ && ./build_musl.sh)
 
-$(APP): src/main.cpp aids.hpp 3rd_party/musl-${MUSL_VERSION}-dist
+$(APP): src/main.cpp 3rd_party/aids.hpp 3rd_party/musl-${MUSL_VERSION}-dist
 	$(CXX) $(CXXFLAGS) src/main.cpp 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crtn.o -o $(APP) $(LIBS)
 

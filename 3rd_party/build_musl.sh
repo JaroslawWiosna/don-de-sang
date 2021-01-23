@@ -16,6 +16,7 @@ if [ ! -d ${MUSL_DIST} ]; then
             git fetch --all --tags
             #TODO: Check if git version is at least x.yy
             # Because in old git git reset might not be supported
+            # Consider building git from sources in CI
             git reset --hard HEAD
             git clean -fdx
             git checkout tags/${MUSL_VERSION}

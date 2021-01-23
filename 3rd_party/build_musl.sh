@@ -14,7 +14,7 @@ if [ ! -d ${MUSL_DIST} ]; then
         else
             echo Checkouted Musl version is not the one we want!
             git fetch --all --tags
-            #TODO: Check if git version is at least x.yy
+            #TODO(#5): Check if git version is at least x.yy
             # Because in old git git reset might not be supported
             # Consider building git from sources in CI
             git reset --hard HEAD

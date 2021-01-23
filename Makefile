@@ -1,4 +1,5 @@
-MUSL_VERSION=v1.2.1
+#TODO: Musl version should be updated in only one place
+MUSL_VERSION=v1.2.2
 APP=don-de-sang
 
 CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb

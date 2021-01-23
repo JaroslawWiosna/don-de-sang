@@ -139,7 +139,7 @@ void summary(Dynamic_Array<Donation> d) {
     }
 }
 
-int test() {
+int tests() {
     Date begin = load_date_from_iso8601("2012-01-01"_sv);
     Date end = load_date_from_iso8601("2016-01-02"_sv);
 
@@ -150,6 +150,7 @@ int test() {
 }
 
 int main() {
+    tests();
     auto db_file = read_file_as_string_view("db.txt").value_or();
     auto dons = parse_db_file(db_file);
     sanity_check(dons);

@@ -1,4 +1,5 @@
-MUSL_VERSION=v1.2.1
+#TODO(#6): Musl version should be updated in only one place
+MUSL_VERSION=v1.2.2
 APP=don-de-sang
 
 CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb
@@ -6,7 +7,7 @@ LIBS=3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crt*.o \
 	 -L 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/ \
 	 -l:libc.a
 
-.PHONY: all run
+.PHONY: all run clean
 
 all: $(APP)
 
@@ -24,6 +25,8 @@ run: $(APP)
 $(APP): src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/musl-${MUSL_VERSION}-dist
 	$(CXX) $(CXXFLAGS) src/main.cpp 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crtn.o -o $(APP) $(LIBS)
 
+clean:
+	git clean -X -f --exclude='!3rd_party/musl-*-dist'
 
 .PHONY: vallgrind callgrind info
 

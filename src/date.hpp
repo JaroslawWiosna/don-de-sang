@@ -22,8 +22,11 @@ struct Duration {
     long long dur{};
 
     char *c_str() {
+        long long days = dur / 86400;
+        int years = days / 365;
+        days = days % 365;
         char *res = (char*)malloc(256);
-        sprintf(res, "%lld days", dur / 86400);
+        sprintf(res, "%d years and %lld days", years, days);
         return res;
     }
 };

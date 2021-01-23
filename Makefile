@@ -11,7 +11,7 @@ LIBS=3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crt*.o \
 
 all: $(APP)
 
-run: $(APP)
+run: clean $(APP)
 	./$(APP)
 
 3rd_party/musl-${MUSL_VERSION}-dist:

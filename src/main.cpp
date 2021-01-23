@@ -139,13 +139,21 @@ void summary(Dynamic_Array<Donation> d) {
     }
 }
 
+#define ASSERT_EQ_STR(expected, actual)                     \
+    do {                                                    \
+        if (strcmp(expected, actual)) {                     \
+            panic("ERROR: expected ", expected              \
+                "\n       actual   ", actual, '\n');        \
+        }                                                   \
+    } while(0);
+
 int tests() {
     Date begin = load_date_from_iso8601("2012-01-01"_sv);
     Date end = load_date_from_iso8601("2016-01-02"_sv);
 
     Duration period = end - begin;
     puts(period.c_str());
-    assert(!strcmp("1462 days", period.c_str()));
+    ASSERT_EQ_STR("1462 days", period.c_str());
     return 0;
 }
 

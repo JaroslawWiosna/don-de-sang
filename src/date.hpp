@@ -8,14 +8,21 @@
 using namespace aids;
 
 struct Date {
-    String_View sv{};
+    struct tm t{};
 };
+
+bool operator==(Date lhs, Date rhs) {
+    return (0 == memcmp((void*)&lhs.t, (void*)&rhs.t, sizeof(lhs.t)));
+}
 
 // NOTE: issue `man 1 date` and find `iso-8601` for details
 Date load_date_from_iso8601(String_View sv) {
-    Date res{};
-    res.sv = sv;
-    return res;
+    struct tm t{};
+    memset(&t, 0, sizeof(struct tm)); 
+    char buf0[255];
+    memcpy(buf0, sv.data, sv.count);
+    strptime(buf0, "%Y-%m-%d", &t);
+    return {t};
 }
 
 struct Duration {
@@ -31,25 +38,6 @@ struct Duration {
     }
 };
 
-Duration operator-(Date end, Date begin){
-    struct tm tm;
-    memset(&tm, 0, sizeof(struct tm)); 
-    char buf0[255];
-    memcpy(buf0, begin.sv.data, begin.sv.count);
-    strptime(buf0, "%Y-%m-%d", &tm);
-
-    char buf1[255];
-    strftime(buf1, sizeof(buf1), "%s", &tm);
-
-    memcpy(buf0, end.sv.data, end.sv.count);
-    strptime(buf0, "%Y-%m-%d", &tm);
-
-    char buf2[255];
-    strftime(buf2, sizeof(buf2), "%s", &tm);
-        
-    return {atoll(buf2) - atoll(buf1)};
-}
-
 Duration operator-(const struct tm end, const struct tm begin){
     char buf1[255];
     strftime(buf1, sizeof(buf1), "%s", &begin);
@@ -58,6 +46,27 @@ Duration operator-(const struct tm end, const struct tm begin){
     strftime(buf2, sizeof(buf2), "%s", &end);
         
     return {atoll(buf2) - atoll(buf1)};
+}
+
+Duration operator-(Date end, Date begin){
+    return end.t - begin.t;
+}
+
+Duration operator ""_day(unsigned long long int i) {
+    return {60 * 60 * 24 * (long long int)i};    
+}
+
+Date operator+(Date date, Duration duration) {
+    char buf[255];
+    strftime(buf, sizeof(buf), "%s", &date.t);
+    long long res = atoll(buf) + duration.dur;
+
+    struct tm t{};
+    memset(&t, 0, sizeof(struct tm)); 
+    char buf0[255];
+    sprintf(buf0, "%lld", res);
+    strptime(buf0, "%s", &t);
+    return {t};
 }
 
 #endif // DATE_HPP_

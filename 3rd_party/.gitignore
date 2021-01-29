@@ -1,4 +1,8 @@
 musl
 musl-*-dist
 
+dietlibc-*.tar.xz
+dietlibc-*
+dietlibc-*-dist
+
 aids-patched.hpp

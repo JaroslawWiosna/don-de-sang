@@ -14,7 +14,8 @@ jobs:
         with:
           path: |
             ./3rd_party/musl-v1.2.2-dist
-          key: ${{ runner.os }}-musl-1.2.2
+            ./3rd_party/dietlibc-0.34-dist
+          key: ${{ runner.os }}-musl-1.2.2-dietlibc-0.34
       - name: build
         run: |
           make -B
@@ -33,6 +34,9 @@ jobs:
       - name: callgrind
         run: |
           make callgrind
+      - name: make don-de-sang-dietlibc
+        run: |
+          make don-de-sang-dietlibc
         env:
           CC: gcc
           CXX: g++

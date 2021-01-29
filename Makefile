@@ -9,7 +9,7 @@ LIBS=3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crt*.o \
 
 .PHONY: all run clean
 
-all: $(APP) $(APP)-dietlibc
+all: $(APP)
 
 run: clean $(APP)
 	./$(APP)

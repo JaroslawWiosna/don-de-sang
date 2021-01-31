@@ -1,6 +1,11 @@
 #!/usr/bin/env bash
 
-MUSL_VERSION=v1.2.2
+if [ $# -ge 1 ]; then
+    MUSL_VERSION=$1
+else
+    MUSL_VERSION=v1.2.2
+fi
+
 MUSL_DIST=musl-${MUSL_VERSION}-dist
 
 if [ ! -d ${MUSL_DIST} ]; then

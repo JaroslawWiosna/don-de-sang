@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 
-DIET_LIBC_VERSION=0.34
+if [ $# -ge 1 ]; then
+    DIET_LIBC_VERSION=$1
+else
+    DIET_LIBC_VERSION=0.34
+fi
 
 TARBALL=dietlibc-${DIET_LIBC_VERSION}.tar.xz
 DOWNLOAD_LINK=https://www.fefe.de/dietlibc/${TARBALL}

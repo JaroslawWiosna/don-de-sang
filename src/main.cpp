@@ -164,8 +164,8 @@ int tests() {
     EXPECT_EQ_STR("1 days", period.c_str());
 
     {
-        auto expected = iso8601("1970-01-05"_sv);
-        auto actual = (begin + 3_day);
+        auto expected = iso8601("1970-01-09"_sv);
+        auto actual = (begin + 1_week);
         {
             Duration period = expected - begin;
             puts(period.c_str());

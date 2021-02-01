@@ -71,6 +71,10 @@ Duration operator ""_day(unsigned long long int i) {
     return {60 * 60 * 24 * (long long int)i};    
 }
 
+Duration operator ""_week(unsigned long long int i) {
+    return {60 * 60 * 24 * 7 * (long long int)i};    
+}
+
 Date operator+(Date date, Duration duration) {
     auto tm = mktime(&date.t);
     tm += duration.dur;

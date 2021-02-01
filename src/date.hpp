@@ -50,8 +50,9 @@ struct Duration {
         long long days = dur / 86400;
         int years = days / 365;
         days = days % 365;
-        char *res = (char*)malloc(256);
-        sprintf(res, "%d years and %lld days", years, days);
+        const int RES_CAPACITY{256};
+        char *res = (char*)malloc(RES_CAPACITY);
+        snprintf(res, RES_CAPACITY, "%d years and %lld days", years, days);
         return res;
     }
 };

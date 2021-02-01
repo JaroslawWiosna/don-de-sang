@@ -16,7 +16,7 @@ bool operator==(Date lhs, Date rhs) {
 }
 
 // NOTE: issue `man 1 date` and find `iso-8601` for details
-Date load_date_from_iso8601(String_View sv) {
+Date iso8601(String_View sv) {
     struct tm t{};
     memset(&t, 0, sizeof(struct tm)); 
     char buf0[255];

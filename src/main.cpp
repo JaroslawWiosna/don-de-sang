@@ -156,16 +156,16 @@ void summary(Dynamic_Array<Donation> d) {
     } while(0);
 
 int tests() {
-    Date begin = iso8601("2012-01-01"_sv);
-    Date end = iso8601("2016-01-02"_sv);
+    Date begin = iso8601("1970-01-02"_sv);
+    Date end = iso8601("1970-01-03"_sv);
 
     Duration period = end - begin;
     puts(period.c_str());
-    EXPECT_EQ_STR("1462 days", period.c_str());
+    EXPECT_EQ_STR("1 days", period.c_str());
 
     {
-        auto expected = iso8601("2012-01-05"_sv);
-        auto actual = (begin + 4_day);
+        auto expected = iso8601("1970-01-05"_sv);
+        auto actual = (begin + 3_day);
         {
             Duration period = expected - begin;
             puts(period.c_str());
@@ -181,7 +181,6 @@ int tests() {
 
 int main() {
     tests();
-    return 0;
     auto db_file = read_file_as_string_view("db.txt").value_or();
     auto dons = parse_db_file(db_file);
     sanity_check(dons);

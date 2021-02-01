@@ -11,12 +11,30 @@ struct Date {
     struct tm t{};
 };
 
+void print1(FILE *stream, Date date) {
+    print(stream, '{',
+        "tm_sec == ", date.t.tm_sec,
+        ", tm_min == ", date.t.tm_min,
+        ", tm_hour == ", date.t.tm_hour,
+        ", tm_mday == ", date.t.tm_mday,
+        ", tm_mon == ", date.t.tm_mon,
+        ", tm_year == ", date.t.tm_year,
+        ", tm_wday == ", date.t.tm_wday,
+        ", tm_yday == ", date.t.tm_yday,
+        ", tm_isdst == ", date.t.tm_isdst,
+        ", tm_gmtoff == ", date.t.tm_gmtoff, 
+        ", tm_zone == ", date.t.tm_zone,
+        '}');
+}
+
 bool operator==(Date lhs, Date rhs) {
-    return (0 == memcmp((void*)&lhs.t, (void*)&rhs.t, sizeof(lhs.t)));
+    return (lhs.t.tm_year == rhs.t.tm_year) 
+        && (lhs.t.tm_mon == rhs.t.tm_mon) 
+        && (lhs.t.tm_mday == rhs.t.tm_mday);
 }
 
 // NOTE: issue `man 1 date` and find `iso-8601` for details
-Date load_date_from_iso8601(String_View sv) {
+Date iso8601(String_View sv) {
     struct tm t{};
     memset(&t, 0, sizeof(struct tm)); 
     char buf0[255];
@@ -38,14 +56,11 @@ struct Duration {
     }
 };
 
-Duration operator-(const struct tm end, const struct tm begin){
-    char buf1[255];
-    strftime(buf1, sizeof(buf1), "%s", &begin);
+Duration operator-(struct tm end, struct tm begin){
+    auto b = mktime(&begin);
+    auto e = mktime(&end);
 
-    char buf2[255];
-    strftime(buf2, sizeof(buf2), "%s", &end);
-        
-    return {atoll(buf2) - atoll(buf1)};
+    return {(long long)difftime(e, b)};
 }
 
 Duration operator-(Date end, Date begin){
@@ -57,16 +72,12 @@ Duration operator ""_day(unsigned long long int i) {
 }
 
 Date operator+(Date date, Duration duration) {
-    char buf[255];
-    strftime(buf, sizeof(buf), "%s", &date.t);
-    long long res = atoll(buf) + duration.dur;
-
-    struct tm t{};
-    memset(&t, 0, sizeof(struct tm)); 
-    char buf0[255];
-    sprintf(buf0, "%lld", res);
-    strptime(buf0, "%s", &t);
-    return {t};
+    auto tm = mktime(&date.t);
+    tm += duration.dur;
+    struct tm *lt = localtime(&tm);
+    struct tm result{};
+    memcpy(&result, lt, sizeof(result));
+    return {result};
 }
 
 #endif // DATE_HPP_

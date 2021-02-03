@@ -1,0 +1,8 @@
+https://stackoverflow.com/questions/32696841/when-using-the-gcc-driver-what-makes-a-static-lib-incompatible
+https://www.raspberrypi.org/forums/viewtopic.php?t=75845
+https://stackoverflow.com/questions/32696841/when-using-the-gcc-driver-what-makes-a-static-lib-incompatible
+https://stackoverflow.com/questions/52708453/armv7-gcc-option-to-force-native-divide
+https://stackoverflow.com/questions/59462844/what-is-the-correct-way-to-static-link-libc
+https://wiki.musl-libc.org/getting-started.html
+https://oroboro.com/build-gcc-musl-raspbian/
+https://stackoverflow.com/questions/28331521/how-do-i-link-the-correct-library-so-aeabi-idiv-and-aeabi-idivmod-work/43117493

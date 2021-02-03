@@ -2,10 +2,23 @@ MUSL_VERSION=v1.2.2
 DIETLIBC_VERSION=0.34
 APP=don-de-sang
 
-CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb
+CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb -mcpu=native -mtune=native -mfpu=auto
+#CXXFLAGS=-I. -I3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/include -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb -mcpu=cortex-a7
 LIBS=3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crt*.o \
-	 -L 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/ \
-	 -l:libc.a
+-L 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/ \
+-l:libc.a \
+-l:libcrypt.a \
+-l:libdl.a \
+-l:libm.a \
+-l:libpthread.a \
+-l:libresolv.a \
+-l:librt.a \
+-l:libutil.a \
+-l:libxnet.a \
+-L /usr/lib/gcc/arm-linux-gnueabihf/8/ \
+-l:libgcc.a
+#3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/rcrt1.o \
+#3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/Scrt1.o \
 
 .PHONY: all run clean
 
@@ -29,7 +42,9 @@ $(APP): src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/musl-${MUSL_VERSION}-d
 	$(CXX) $(CXXFLAGS) src/main.cpp 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crtn.o -o $(APP) $(LIBS)
 
 $(APP)-dietlibc: src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist
-	$(CXX) $(CXXFLAGS) src/main.cpp -o $(APP)-dietlibc -L 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-x86_64/ -l:libc.a
+	$(CXX) $(CXXFLAGS) -ffreestanding -flto src/main.cpp 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-arm/start.o  -o $(APP)-dietlibc -L 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-arm/ -l:libc.a \
+		-L /usr/lib/gcc/arm-linux-gnueabihf/8/ \
+		-l:libgcc.a
 
 clean:
 	git clean -X -f --exclude='!3rd_party/*-dist'

@@ -2,12 +2,22 @@ MUSL_VERSION=v1.2.2
 DIETLIBC_VERSION=0.34
 APP=don-de-sang
 
-CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb
+CXXFLAGS=-I. -std=c++17 -Wall -fno-exceptions -nodefaultlibs -nostdlib -ggdb -march=armv8-a+crc -mtune=cortex-a72
 LIBS=3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crt*.o \
 	 -L 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/ \
-	 -l:libc.a
-
+	 -l:libc.a \
+	 -L /usr/lib/gcc/aarch64-unknown-linux-gnu/10.2.0/ \
+	 -l:libgcc.a
 .PHONY: all run clean
+#         -l:librt.a \
+#         -l:libresolv.a \
+#         -l:libcrypt.a \
+#         -l:libutil.a \
+#         -l:libc.a \
+#         -l:libxnet.a \
+#         -l:libdl.a \
+#         -l:libpthread.a \
+#         -l:libm.a \
 
 all: $(APP)
 
@@ -29,7 +39,9 @@ $(APP): src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/musl-${MUSL_VERSION}-d
 	$(CXX) $(CXXFLAGS) src/main.cpp 3rd_party/musl-${MUSL_VERSION}-dist/usr/local/musl/lib/crtn.o -o $(APP) $(LIBS)
 
 $(APP)-dietlibc: src/main.cpp 3rd_party/aids-patched.hpp 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist
-	$(CXX) $(CXXFLAGS) src/main.cpp -o $(APP)-dietlibc -L 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-x86_64/ -l:libc.a
+	$(CXX) $(CXXFLAGS) -ffreestanding -flto src/main.cpp 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-aarch64/start.o -o $(APP)-dietlibc -L 3rd_party/dietlibc-${DIETLIBC_VERSION}-dist/opt/diet/lib-aarch64/ -l:libc.a \
+	 -L /usr/lib/gcc/aarch64-unknown-linux-gnu/10.2.0/ \
+	 -l:libgcc.a
 
 clean:
 	git clean -X -f --exclude='!3rd_party/*-dist'

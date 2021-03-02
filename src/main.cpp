@@ -5,7 +5,14 @@
 
 using namespace aids;
 
+enum class Gender {
+    Unknown,
+    Female,
+    Male,
+};
+
 struct Donation {
+   Gender gender{Gender::Unknown};
    struct tm t{};
    unsigned int amount{450};
    unsigned int sum{};
@@ -47,10 +54,18 @@ void sanity_check(Dynamic_Array<Donation> d) {
 
 Dynamic_Array<Donation> parse_db_file(String_View db_file) {
     Dynamic_Array<Donation> donations{};
+    Gender gender{Gender::Unknown};
     while (db_file.count > 0) {
         auto line = db_file.chop_by_delim('\n');
         line = line.trim();
         if (line.count == 0) {
+            continue;
+        }
+        if ("male"_sv == line) {
+            gender = Gender::Male;
+            continue;
+        } else if ("female"_sv == line) {
+            gender = Gender::Female;
             continue;
         }
         auto date = line.chop_word();
@@ -75,7 +90,7 @@ Dynamic_Array<Donation> parse_db_file(String_View db_file) {
         memcpy(buf0, date.data, date.count);
         strptime(buf0, "%Y-%m-%d", &tm);
 
-        donations.push(Donation{tm, amount, {}});
+        donations.push(Donation{gender, tm, amount, {}});
     }
     return donations;
 }
@@ -113,18 +128,28 @@ void summary(Dynamic_Array<Donation> d) {
     static_assert(3 == thd_female_size);
     constexpr size_t thd_male_size = (sizeof(thd_male) / sizeof(thd_male[0]));
     static_assert(3 == thd_male_size);
+
+    static_assert(thd_female_size == thd_male_size);
+    constexpr size_t thd_size = thd_female_size; // or thd_male_size, whatever
+
+    Treshold (*thd)[thd_size] = nullptr;
     
     for (size_t i{}; i < d.size; ++i) {
+        if (Gender::Female == d.data[i].gender) {
+            thd = &thd_female;
+        } else if (Gender::Male == d.data[i].gender) {
+            thd = &thd_male;
+        } 
         print(stdout, i+1, ". ", d.data[i]);
-        for (size_t j{}; j < thd_male_size; ++j) {
-            if (!thd_male[j].passed && d.data[i].sum >= thd_male[j].thr) {
-                thd_male[j].origin = &d.data[0].t;
-                thd_male[j].last = &d.data[i].t;
+        for (size_t j{}; j < thd_size; ++j) {
+            if (!thd[j]->passed && d.data[i].sum >= thd[j]->thr) {
+                thd[j]->origin = &d.data[0].t;
+                thd[j]->last = &d.data[i].t;
                 print(stdout, 
-                        thd_male[j].thr, 
+                        thd[j]->thr, 
                         " treshold reached! It took ", 
-                        operator-(*thd_male[j].last, *thd_male[j].origin).c_str());
-                thd_male[j].passed = true;
+                        operator-(*thd[j]->last, *thd[j]->origin).c_str());
+                thd[j]->passed = true;
             
                 print(stdout, '\n');
             }

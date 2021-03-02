@@ -107,34 +107,21 @@ struct Treshold {
 
 
 void summary(Dynamic_Array<Donation> d) {
-    Treshold thd1{6000};
-    Treshold thd2{12000};
-    Treshold thd3{18000};
+    Treshold thd[] = {{6000}, {12000}, {18000}};
+    constexpr size_t thd_size = (sizeof(thd) / sizeof(thd[0]));
+    static_assert(3 == thd_size);
+    
     for (size_t i{}; i < d.size; ++i) {
         print(stdout, i+1, ". ", d.data[i]);
-        if (!thd1.passed && d.data[i].sum >= thd1.thr) {
-            thd1.origin = &d.data[0].t;
-            thd1.last = &d.data[i].t;
-            print(stdout, thd1.thr, " treshold reached! It took ", operator-(*thd1.last, *thd1.origin).c_str());
-            thd1.passed = true;
+        for (size_t j{}; j < thd_size; ++j) {
+            if (!thd[j].passed && d.data[i].sum >= thd[j].thr) {
+                thd[j].origin = &d.data[0].t;
+                thd[j].last = &d.data[i].t;
+                print(stdout, thd[j].thr, " treshold reached! It took ", operator-(*thd[j].last, *thd[j].origin).c_str());
+                thd[j].passed = true;
             
-            print(stdout, '\n');
-        }
-        if (!thd2.passed && d.data[i].sum >= thd2.thr) {
-            thd2.origin = &d.data[0].t;
-            thd2.last = &d.data[i].t;
-            print(stdout, thd2.thr, " treshold reached! It took ", operator-(*thd2.last, *thd2.origin).c_str());
-            thd2.passed = true;
-            
-            print(stdout, '\n');
-        }
-        if (!thd3.passed && d.data[i].sum >= thd3.thr) {
-            thd3.origin = &d.data[0].t;
-            thd3.last = &d.data[i].t;
-            print(stdout, thd3.thr, " treshold reached! It took ", operator-(*thd3.last, *thd3.origin).c_str());
-            thd3.passed = true;
-            
-            print(stdout, '\n');
+                print(stdout, '\n');
+            }
         }
     }
 }

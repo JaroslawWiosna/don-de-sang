@@ -34,9 +34,6 @@ jobs:
       - name: callgrind
         run: |
           make callgrind
-      - name: make don-de-sang-dietlibc
-        run: |
-          make don-de-sang-dietlibc
         env:
           CC: gcc
           CXX: g++

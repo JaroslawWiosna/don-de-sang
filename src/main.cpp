@@ -11,6 +11,18 @@ enum class Gender {
     Male,
 };
 
+String_View to_sv(Gender gender) {
+    switch (gender) {
+        case Gender::Unknown:
+            return "Gender::Unknown"_sv;
+        case Gender::Female:
+            return "Gender::Female"_sv;
+        case Gender::Male:
+            return "Gender::Male"_sv;
+    }
+    panic("Unreachable");
+}
+
 struct Donation {
    Gender gender{Gender::Unknown};
    struct tm t{};
@@ -21,6 +33,8 @@ struct Donation {
 void print1(FILE *stream, Donation don) {
     print(stream, '{');
 
+    print(stream, to_sv(don.gender));
+    print(stream, ", ");
     char buf[255] = {};
     strftime(buf, sizeof(buf), "%d %b %Y", &don.t);
     print(stream, buf);
@@ -123,7 +137,7 @@ struct Treshold {
 
 void summary(Dynamic_Array<Donation> d) {
     Treshold thd_female[] = {{5000}, {10000}, {15000}};
-    Treshold thd_male[] = {{6000}, {12000}, {18000}};
+    Treshold thd_male[] = {{500}, {2000}, {18000}};
     constexpr size_t thd_female_size = (sizeof(thd_female) / sizeof(thd_female[0]));
     static_assert(3 == thd_female_size);
     constexpr size_t thd_male_size = (sizeof(thd_male) / sizeof(thd_male[0]));
@@ -142,14 +156,14 @@ void summary(Dynamic_Array<Donation> d) {
         } 
         print(stdout, i+1, ". ", d.data[i]);
         for (size_t j{}; j < thd_size; ++j) {
-            if (!thd[j]->passed && d.data[i].sum >= thd[j]->thr) {
-                thd[j]->origin = &d.data[0].t;
-                thd[j]->last = &d.data[i].t;
+            if (!(*thd)[j].passed && d.data[i].sum >= (*thd)[j].thr) {
+                (*thd)[j].origin = &d.data[0].t;
+                (*thd)[j].last = &d.data[i].t;
                 print(stdout, 
-                        thd[j]->thr, 
+                        (*thd)[j].thr, 
                         " treshold reached! It took ", 
-                        operator-(*thd[j]->last, *thd[j]->origin).c_str());
-                thd[j]->passed = true;
+                        operator-(*(*thd)[j].last, *(*thd)[j].origin).c_str());
+                (*thd)[j].passed = true;
             
                 print(stdout, '\n');
             }

@@ -188,6 +188,7 @@ void summary(Dynamic_Array<Donation> d) {
     } while(0);
 
 int tests() {
+    print_current_local_time();
     Date begin = iso8601("1970-01-02"_sv);
     Date end = iso8601("1970-01-03"_sv);
 

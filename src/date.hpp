@@ -43,6 +43,13 @@ Date iso8601(String_View sv) {
     return {t};
 }
 
+// https://stackoverflow.com/a/3402672
+void print_current_local_time() {
+    time_t rawtime;
+    time ( &rawtime );
+    printf ( "The current local time is: %s", ctime (&rawtime) );
+}
+
 struct Duration {
     long long dur{};
 

@@ -2,7 +2,7 @@
 #define DATE_HPP_
 
 #include "3rd_party/aids-patched.hpp"
-#include <time.h>
+#include <ctime>
 
 //TODO(#1): using namespace in header file is not smart
 using namespace aids;
@@ -52,7 +52,11 @@ struct Duration {
         days = days % 365;
         const int RES_CAPACITY{256};
         char *res = (char*)malloc(RES_CAPACITY);
-        snprintf(res, RES_CAPACITY, "%d years and %lld days", years, days);
+        if (years > 0) {
+            snprintf(res, RES_CAPACITY, "%d years and %lld days", years, days);
+        } else {
+            snprintf(res, RES_CAPACITY, "%lld days", days);
+        }
         return res;
     }
 };
